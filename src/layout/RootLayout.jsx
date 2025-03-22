@@ -3,27 +3,28 @@ import Header from "../components/Header";
 import { Outlet } from 'react-router-dom';
 import Footer from '../components/Footer';
 import UserHeader from '../components/UserHeader';
+import AdminHeader from "../components/AdminHeader";
 
 export const RootLayout = () => {
-    const [isUserAuth, setIsUserAuth] = useState(!!localStorage.getItem("token"));
+    const [isUserAuth, setIsUserAuth] = useState(localStorage.getItem("role"));
 
     useEffect(() => {
         const checkAuth = () => {
-            setIsUserAuth(!!localStorage.getItem("token"));
+            setIsUserAuth(localStorage.getItem("role"));
         };
 
-        window.addEventListener("storage", checkAuth);
+        //window.addEventListener("storage", checkAuth);
         window.addEventListener("authChange", checkAuth); // 🔥 Listen for custom authChange event
 
         return () => {
-            window.removeEventListener("storage", checkAuth);
+           // window.removeEventListener("storage", checkAuth);
             window.removeEventListener("authChange", checkAuth);
         };
     }, []);
 
     return (
         <div className="d-flex flex-column min-vh-100">
-            {isUserAuth ? <UserHeader /> : <Header />}
+            {isUserAuth === "user" ? <UserHeader /> : isUserAuth === "admin" ? <AdminHeader /> : <Header />}
             <div className="flex-grow-1 container my-4">
                 <Outlet />
             </div>

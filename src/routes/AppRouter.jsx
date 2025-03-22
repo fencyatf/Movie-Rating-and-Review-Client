@@ -18,6 +18,8 @@ import ErrorPage from '../pages/ErrorPage';
 import EditProfile from '../pages/user/EditProfile';
 import ChangePassword from '../pages/user/ChangePassword';
 import DeleteAccount from '../pages/user/DeleteAccount';
+import AdminDashboard from '../pages/admin/AdminDashboard';
+import AdminProtectedRoutes from './AdminProtectedRoutes';
 
 export const router = createBrowserRouter([
   {
@@ -43,6 +45,12 @@ export const router = createBrowserRouter([
           { path: "change-password", element: <ChangePassword /> },
           { path: "delete-account", element: <DeleteAccount /> },
           { path: "watchlist", element: <Watchlist /> },
+        ],
+      },{
+        element: <AdminProtectedRoutes />,
+        children: [
+          { path: "admin-dashboard", element: <AdminDashboard /> },
+          // { path: "admin/users", element: <AdminUsers /> },
         ],
       },
       { path: "*", element: <ErrorPage /> }, 

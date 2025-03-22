@@ -7,27 +7,46 @@ import { Settings, Bookmark, LogOut, Home } from "lucide-react";
 function UserHeader() {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
+  const [role, setRole] = useState(localStorage.getItem("role"));
   const [showSidebar, setShowSidebar] = useState(false);
 
   useEffect(() => {
-    const checkAuth = () => setIsLoggedIn(!!localStorage.getItem("token"));
-    window.addEventListener("storage", checkAuth);
+    if (role === "admin") {
+      navigate("/admin-dashboard"); // ✅ Moved outside JSX
+    }
+  }, [role, navigate]);
+
+  useEffect(() => {
+    const checkAuth = () => {
+      setIsLoggedIn(!!localStorage.getItem("token"));
+      setRole(localStorage.getItem("role")); // Update role dynamically
+    };
+
     window.addEventListener("authChange", checkAuth);
+    window.addEventListener("storage", checkAuth);
+
     return () => {
-      window.removeEventListener("storage", checkAuth);
       window.removeEventListener("authChange", checkAuth);
+      window.removeEventListener("storage", checkAuth);
     };
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("role"); // Remove role on logout
     setIsLoggedIn(false);
+    setRole(null);
     window.dispatchEvent(new Event("authChange"));
-    navigate("/login");
+    setTimeout(() => {
+      navigate("/login");
+    }, 0);
   };
 
   return (
     <>
+      {/* Redirect to Admin Header if Admin is Logged In */}
+      {role === "admin" ? navigate("/admin-dashboard") : null}
+
       {/* Navbar */}
       <Navbar expand="lg" className="px-4 py-2" style={{ background: "linear-gradient(90deg, #0D47A1, #1976D2)" }}>
         <Container fluid>
@@ -57,7 +76,7 @@ function UserHeader() {
               <Home className="me-2" size={20} /> Home
             </Nav.Link>
 
-            {isLoggedIn && (
+            {isLoggedIn && role === "user" && (
               <>
                 {/* Watchlist */}
                 <Nav.Link as={Link} to="/watchlist" className="d-flex align-items-center text-primary">
@@ -88,7 +107,7 @@ function UserHeader() {
                     <Settings className="me-2" size={20} /> Settings
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
-                  <Dropdown.Item as={Link} to="/change-password" className="text-primary">
+                    <Dropdown.Item as={Link} to="/change-password" className="text-primary">
                       Change Password
                     </Dropdown.Item>
                     <Dropdown.Item as={Link} to="/delete-account" className="text-danger">
@@ -96,8 +115,6 @@ function UserHeader() {
                     </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
-
-
 
                 {/* Logout */}
                 <Nav.Link onClick={handleLogout} className="d-flex align-items-center text-danger mt-2" style={{ cursor: "pointer" }}>

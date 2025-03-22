@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
-const ProtectedRoutes = () => {
+const AdminProtectedRoutes = () => {
   const navigate = useNavigate();
-  const [isUserAuth, setIsUserAuth] = useState(null);
+  const [isAdminAuth, setIsAdminAuth] = useState(null);
 
   useEffect(() => {
     const role = localStorage.getItem("role");
     const token = localStorage.getItem("token");
 
-    if (!token || role !== "user") {
+    if (!token || role !== "admin") {
       navigate("/login");  // Redirect if not authenticated
     } else {
-      setIsUserAuth(true);
+      setIsAdminAuth(true);
     }
   }, []);
 
-  return isUserAuth ? <Outlet /> : null; // Wait until authentication check is complete
+  return isAdminAuth ? <Outlet /> : null; // Wait until authentication check is complete
 };
 
-export default ProtectedRoutes;
+export default AdminProtectedRoutes;

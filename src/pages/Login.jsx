@@ -9,26 +9,63 @@ const Login = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  // const handleLogin = async (e) => {
+  //   e.preventDefault();
+  //   setError(""); // Reset error message
+
+  //   try {
+  //     const response = await axiosInstance.post("/user/login", { email, password });
+
+  //     console.log("API Response:", response.data); // Debugging API response
+
+  //     // Ensure response contains the expected fields
+  //     const { token, user, message } = response.data;
+  //     if (!token || !user || !user.role) {
+  //       throw new Error(message || "Invalid response. Check API.");
+  //     }
+
+  //     // Store token and role
+  //     localStorage.setItem("token", token);
+  //     localStorage.setItem("role", user.role); // 'user' or 'admin'
+
+  //     window.dispatchEvent(new Event("authChange")); // Notify role change
+
+  //     // Redirect based on role
+  //     navigate(user.role === "admin" ? "/admin/admin-dashboard" : "/");
+  //   } catch (err) {
+  //     console.error("Login Error:", err);
+  //     setError(err.response?.data?.message || "Invalid email or password");
+  //   }
+  // };
+
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axiosInstance.post("/user/login", { email, password });
-    
-      console.log("API Response:", response.data); // Debugging API response
-    
-      if (!response.data || !response.data.token) {
-        throw new Error(response.data.message || "Token not received. Check API response.");
+      const apiEndpoint = email === "admin@gmail.com" ? "/admin/login" : "/user/login";
+      const response = await axiosInstance.post(apiEndpoint, { email, password });
+
+      console.log("API Response:", response.data);
+
+      const { token, role, user, message } = response.data;
+
+      if (!token || !(role || user?.role)) {
+        throw new Error(message || "Invalid response. Check API.");
       }
-    
-      localStorage.setItem("token", response.data.token);
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("role", role || user.role); // Handle both user & admin roles
+
       window.dispatchEvent(new Event("authChange"));
-      navigate("/");
+
+      navigate((role || user.role) === "admin" ? "/admin-dashboard" : "/");
+
     } catch (err) {
       console.error("Login Error:", err);
       setError(err.response?.data?.message || "Login failed");
     }
   };
-  
+
 
   return (
     <Container className="d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
@@ -60,11 +97,11 @@ const Login = () => {
 
           <Button variant="primary" type="submit" className="w-100 mt-2">Login</Button>
         </Form>
-        
+
         <p className="text-center mt-3">
           Don't have an account? <span onClick={() => navigate("/signup")} style={{ cursor: "pointer", color: "blue", textDecoration: "underline" }}>Sign Up</span>
         </p>
-        <p className="text-center mt-0.5">
+        <p className="text-center mt-1">
           Forgot your password? <span onClick={() => navigate("/forgot-password")} style={{ cursor: "pointer", color: "blue", textDecoration: "underline" }}>Forgot Password</span>
         </p>
       </Card>
