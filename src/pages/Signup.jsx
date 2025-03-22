@@ -3,39 +3,45 @@ import { Form, Button, Container, Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { axiosInstance } from "../config/axiosInstance";
 
-const Login = () => {
+const Signup = () => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      const response = await axiosInstance.post("/user/login", { email, password });
-    
-      console.log("API Response:", response.data); // Debugging API response
-    
-      if (!response.data || !response.data.token) {
-        throw new Error(response.data.message || "Token not received. Check API response.");
-      }
-    
-      localStorage.setItem("token", response.data.token);
-      window.dispatchEvent(new Event("authChange"));
-      navigate("/");
+      const response = await axiosInstance.post("/user/signup", { name, email, password });
+      setSuccess(response.data.message);
+      setError("");
+      setTimeout(() => navigate("/login"), 1000);
     } catch (err) {
-      console.error("Login Error:", err);
-      setError(err.response?.data?.message || "Login failed");
+      setError(err.response?.data?.message || "Signup failed");
+      setSuccess("");
     }
   };
-  
 
   return (
     <Container className="d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
       <Card style={{ width: "400px", padding: "20px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)" }}>
-        <h3 className="text-center">Login</h3>
+        <h3 className="text-center">Sign Up</h3>
         {error && <p className="text-danger text-center">{error}</p>}
-        <Form onSubmit={handleLogin}>
+        {success && <p className="text-success text-center">{success}</p>}
+        <Form onSubmit={handleSignup}>
+          <Form.Group controlId="formName" className="mb-3">
+            <Form.Label>Name</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </Form.Group>
+
           <Form.Group controlId="formEmail" className="mb-3">
             <Form.Label>Email address</Form.Label>
             <Form.Control
@@ -58,18 +64,14 @@ const Login = () => {
             />
           </Form.Group>
 
-          <Button variant="primary" type="submit" className="w-100 mt-2">Login</Button>
+          <Button variant="primary" type="submit" className="w-100 mt-2">Sign Up</Button>
         </Form>
-        
         <p className="text-center mt-3">
-          Don't have an account? <span onClick={() => navigate("/signup")} style={{ cursor: "pointer", color: "blue", textDecoration: "underline" }}>Sign Up</span>
-        </p>
-        <p className="text-center mt-0.5">
-          Forgot your password? <span onClick={() => navigate("/forgot-password")} style={{ cursor: "pointer", color: "blue", textDecoration: "underline" }}>Forgot Password</span>
+          Already have an account? <a href="/login">Login</a>
         </p>
       </Card>
     </Container>
   );
 };
 
-export default Login;
+export default Signup;
