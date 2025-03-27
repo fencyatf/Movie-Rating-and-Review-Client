@@ -34,18 +34,20 @@ const Profile = () => {
         {user && (
           <Card className="p-4 text-center ">
             {/* Profile Picture Display */}
-            {user.profilePic ? (
-              <Image
-                src={user.profilePic}
-                alt="Profile"
-                roundedCircle
-                className="mb-3"
-                width={150}
-                height={150}
-              />
-            ) : (
-              <p>No profile picture uploaded</p>
-            )}
+            <div className="d-flex justify-content-center">
+              {user.profilePic ? (
+                <Image
+                  src={user.profilePic}
+                  alt="Profile"
+                  roundedCircle  
+                  className="mb-3"
+                  width={200} // Adjust size as needed
+                  height={200}
+                />
+              ) : (
+                <p>No profile picture uploaded</p>
+              )}
+            </div>
 
             <h4>Name: {user.name}</h4>
             <h5>Email: {user.email}</h5>

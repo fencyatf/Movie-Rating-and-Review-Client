@@ -1,52 +1,61 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Button, Form, Card } from "react-bootstrap";
 import { FaSearch } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
 import Carousel from "react-bootstrap/Carousel";
-
-const trendingMalayalamMovies = [
-  {
-    id: 1,
-    title: "2018",
-    poster: "https://www.zonkerala.com/movies/gallery/2018/malayalam-film-2018-latest-pictures-7341.jpg",
-    rating: "★★★★★",
-    description: "A survival thriller depicting the Kerala floods of 2018 and the resilience of its people.",
-  },
-  {
-    id: 2,
-    title: "RDX",
-    poster: "https://pics.filmaffinity.com/RDX_Robert_Dony_Xavier-556848212-large.jpg",
-    rating: "★★★★☆",
-    description: "An action-packed drama about three friends and their fight against injustice.",
-  },
-  {
-    id: 3,
-    title: "Manjummel Boys",
-    poster: "https://mir-s3-cdn-cf.behance.net/project_modules/1400/cf212a192636849.65def29b8ff6a.jpg",
-    rating: "★★★★★",
-    description: "A thrilling story of friendship and survival, inspired by real events.",
-  },
-  {
-    id: 4,
-    title: "Bramayugam",
-    poster: "https://m.media-amazon.com/images/M/MV5BNzc4OTY4ODUtNGI5Mi00MzhhLTlhYTEtYTk0Nzk1ODU2YWJkXkEyXkFqcGdeQXVyMTE5NjE5Mjc2._V1_.jpg",
-    rating: "★★★★☆",
-    description: "A dark and mysterious horror-thriller set in ancient Kerala.",
-  },
-];
+import { axiosInstance } from "../config/axiosInstance";
 
 const Home = () => {
-  const isUserAuth = !!localStorage.getItem("token");
-  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [movies, setMovies] = useState([]);
+  const [error, setError] = useState("");
+  const [genres, setGenres] = useState([]);
 
-  // Redirect logged-in users to the user dashboard home
-  // if (isUserAuth) {
-  //   navigate("/");
-  // }
+  useEffect(() => {
+    const fetchGenres = async () => {
+      try {
+        const response = await axiosInstance.get('/genres');
+        setGenres(response.data);
+      } catch (err) {
+        console.error("Error fetching genres:", err);
+      }
+    };
+
+    fetchGenres();
+  }, []);
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) return;
+
+    try {
+      let response;
+
+      // Try to find the genre object in the list
+      const genreMatch = genres.find(g => g.name.toLowerCase() === searchQuery.toLowerCase());
+
+      if (genreMatch) {
+        // If a matching genre is found, search by genre ID instead of name
+        response = await axiosInstance.get(`/movies/genre/${genreMatch.name}`);
+      } else {
+        // Otherwise, search for movies by title
+        response = await axiosInstance.get(`/movies/search/${searchQuery}`);
+      }
+
+      setMovies(response.data);
+      setError("");
+    } catch (err) {
+      setMovies([]);
+      setError("No movies found");
+    }
+  };
+
+
 
   return (
     <>
-      {/* Public Hero Section with Carousel */}
       <section className="text-center py-5 bg-dark text-white">
         <Container>
           <Carousel>
@@ -72,46 +81,45 @@ const Home = () => {
               </Carousel.Caption>
             </Carousel.Item>
           </Carousel>
-          <h1 className="display-4 mt-4">Rate Your Favorite Movies</h1>
-          <p className="lead">Explore reviews, ratings, and trending cinema!</p>
+          
         </Container>
       </section>
 
-      {/* Search Bar */}
       <section className="py-4 bg-light">
         <Container>
           <Form className="d-flex justify-content-center">
-            <Form.Control type="text" placeholder="Search movies..." className="w-50 me-2" />
-            <Button variant="primary">
-              <FaSearch />
-            </Button>
+            <Form.Control type="text" placeholder="Search movies or genres..." className="w-50 me-2" value={searchQuery} onChange={handleSearchChange} />
+            <Button variant="primary" onClick={handleSearch}><FaSearch /></Button>
           </Form>
         </Container>
       </section>
 
-      {/* Trending Malayalam Movies */}
       <section className="py-5">
         <Container>
-          <h2 className="text-center mb-4">Trending Malayalam Movies</h2>
+          {error && <p className="text-center text-danger">{error}</p>}
           <Row>
-            {trendingMalayalamMovies.map((movie) => (
-              <Col key={movie.id} md={3} sm={6} className="mb-4">
-                <Card className="shadow h-100">
-                  <Card.Img
-                    variant="top"
-                    src={movie.poster}
-                    alt={movie.title}
-                    style={{ height: "400px", objectFit: "cover" }}
-                  />
-                  <Card.Body className="d-flex flex-column">
-                    <Card.Title className="fw-bold">{movie.title}</Card.Title>
-                    <Card.Text className="text-warning">{movie.rating}</Card.Text>
-                    <Card.Text className="flex-grow-1">{movie.description}</Card.Text>
-                    <Button variant="primary" className="mt-auto">View Details</Button>
-                  </Card.Body>
-                </Card>
-              </Col>
-            ))}
+            {movies.length > 0 ? (
+              movies.map((movie) => (
+                <Col key={movie._id} md={3} sm={6} className="mb-4">
+                  <Card className="shadow h-100">
+                    <Card.Img variant="top" src={movie.posterUrl || "https://via.placeholder.com/400x600?text=No+Image"} alt={movie.title || "Movie Poster"} style={{ height: "400px", objectFit: "cover" }} />
+                    <Card.Body className="d-flex flex-column">
+                      <Card.Title className="fw-bold">{movie.title}</Card.Title>
+                      {/* <Card.Text>
+                        <strong>Genre:</strong> {genres.find(g => g._id.toString() === movie.genre.toString())?.name || "N/A"}
+                      </Card.Text> */}
+                      <Card.Text className="text-warning">
+                        ⭐ {movie.averageRating ? movie.averageRating.toFixed(1) : "No rating"} ({movie.ratingCount || 0} reviews)
+                      </Card.Text>
+
+                      <Card.Text className="flex-grow-1">{movie.description || "No description available"}</Card.Text>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              ))
+            ) : (
+              <h3 className="text-center text-muted">Start searching for movies!</h3>
+            )}
           </Row>
         </Container>
       </section>

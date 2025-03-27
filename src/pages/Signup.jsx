@@ -64,7 +64,7 @@ const Signup = () => {
             />
           </Form.Group>
 
-          <Button variant="primary" type="submit" className="w-100 mt-2">Sign Up</Button>
+          <Button type="submit" className="w-100 mt-2" style={{ background: "linear-gradient(90deg, #000000, #8B0000, #FF4500)" }}>Sign Up</Button>
         </Form>
         <p className="text-center mt-3">
           Already have an account? <a href="/login">Login</a>

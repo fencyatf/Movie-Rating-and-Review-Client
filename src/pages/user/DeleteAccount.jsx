@@ -16,12 +16,17 @@ const DeleteAccount = () => {
     setSuccess("");
 
     try {
-      const response = await axiosInstance.delete("/user/delete-my-account");
+      const response = await axiosInstance.delete("/user/delete-my-account", {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    });
       setSuccess(response.data.message);
 
       // Clear user authentication data from storage (JWT tokens, session data, etc.)
       localStorage.removeItem("token");
-      sessionStorage.removeItem("token");
+        localStorage.removeItem("role");
+        sessionStorage.removeItem("token");
+
+        window.dispatchEvent(new Event("authChange"));
 
       // Simulating logout and redirecting to login page after  
       setTimeout(() => {

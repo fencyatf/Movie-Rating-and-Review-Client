@@ -1,52 +1,53 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState } from "react";
 import { axiosInstance } from "../../config/axiosInstance";
-import { Container, Alert, Spinner } from "react-bootstrap";
 
-const Review = () => {
-    const { movieId } = useParams();  // ✅ Get movieId from URL
-    const [reviews, setReviews] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState("");
+const Review = ({ movieId, setReviews }) => {
+    const [rating, setRating] = useState(1);
+    const [reviewText, setReviewText] = useState("");
 
-    useEffect(() => {
-        const fetchReviews = async () => {
-            try {
-                if (!movieId) {  // ✅ Prevent API call if movieId is missing
-                    setError("Movie ID is missing");
-                    setLoading(false);
-                    return;
-                }
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const { data } = await axiosInstance.post(`/reviews/${movieId}`, {
+                rating: Number(rating),
+                review: reviewText.trim(), // Prevent empty spaces being sent
+            });
 
-                const response = await axiosInstance.get(`/reviews/${movieId}`);
-                setReviews(response.data);
-            } catch (err) {
-                setError(err.response?.data?.message || "Failed to fetch reviews");
-            } finally {
-                setLoading(false);
-            }
-        };
+            setReviews((prevReviews) => [...prevReviews, data.review]); // Ensure 'review' is added
+            setReviewText("");
+            setRating(1);
+        } catch (error) {
+            console.error("Error submitting review:", error.response?.data || error.message);
+        }
+    };
 
-        fetchReviews();
-    }, [movieId]);
 
     return (
-        <Container className="mt-4">
-            <h3>Movie Reviews</h3>
-            {loading && <Spinner animation="border" />}
-            {error && <Alert variant="danger">{error}</Alert>}
-
-            {Array.isArray(reviews) && reviews.length > 0 ? (
-                reviews.map((review) => (
-                    <div key={review._id} className="review-card">
-                        <p><strong>{review.userId?.name || "Anonymous"}:</strong> {review.text}</p>
-                    </div>
-                ))
-            ) : (
-                !loading && <p>No reviews available</p>
-            )}
-        </Container>
+        <div className="mb-3">
+            <h4>Add a Review</h4>
+            <form onSubmit={handleSubmit}>
+                <div className="mb-2">
+                    <label>Rating: </label>
+                    <select value={rating} onChange={(e) => setRating(e.target.value)} className="form-select">
+                        {[1, 2, 3, 4, 5].map((num) => (
+                            <option key={num} value={num}>{num} Stars</option>
+                        ))}
+                    </select>
+                </div>
+                <div className="mb-2">
+                    <textarea
+                        className="form-control"
+                        rows="3"
+                        placeholder="Write a review..."
+                        value={reviewText}
+                        onChange={(e) => setReviewText(e.target.value)}
+                    />
+                </div>
+                <button type="submit" className="btn btn-primary">Submit Review</button>
+            </form>
+        </div>
     );
 };
 
 export default Review;
+

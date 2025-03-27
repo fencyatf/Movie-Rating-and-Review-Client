@@ -14,9 +14,11 @@ const ProtectedRoutes = () => {
     } else {
       setIsUserAuth(true);
     }
-  }, []);
+  },  [navigate]);
 
-  return isUserAuth ? <Outlet /> : null; // Wait until authentication check is complete
+  if (isUserAuth === null) return null; // Prevent flicker
+
+  return <Outlet />;
 };
 
 export default ProtectedRoutes;

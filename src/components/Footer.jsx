@@ -6,7 +6,7 @@ const Footer = () => {
         <div>
             <footer
                 className="footer footer-horizontal footer-center text-white rounded p-10"
-                style={{ background: "linear-gradient(90deg, #0D47A1, #1976D2)" }} // Matching header color
+                style={{ background: "linear-gradient(90deg, #000000, #8B0000, #FF4500)" }} // Matching header color
             >
                 {/* Navigation Links */}
                 <nav className="grid grid-flow-col gap-4 mt-4">

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 function Header() {
   return (
-    <Navbar expand="lg" className="px-5" style={{ background: "linear-gradient(90deg, #0D47A1, #1976D2)" }}>
+    <Navbar expand="lg" className="px-5" style={{ background: "linear-gradient(90deg, #000000, #8B0000, #FF4500)" }}>
       <Container fluid>
         
         {/* Brand Logo */}

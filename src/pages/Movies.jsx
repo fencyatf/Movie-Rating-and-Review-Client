@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../config/axiosInstance";
-import { Container, Row, Col, Card } from "react-bootstrap";
+import { Container, Row, Col, Card, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 const Movies = () => {
   const [movies, setMovies] = useState([]);
@@ -11,7 +12,6 @@ const Movies = () => {
     const fetchMovies = async () => {
       try {
         const response = await axiosInstance.get("/movies"); // Fetch all movies
-        console.log("Movies Data:", response.data); // Debugging
         setMovies(response.data);
         setLoading(false);
       } catch (error) {
@@ -38,12 +38,18 @@ const Movies = () => {
                 src={movie.posterUrl}
                 alt={movie.title}
                 style={{ height: "300px", objectFit: "cover" }}
-                onError={(e) => (e.target.src = "/fallback.jpg")} // Use fallback image if not found
+                onError={(e) => (e.target.src = "/fallback.jpg")} // Fallback image
               />
               <Card.Body>
                 <Card.Title>{movie.title}</Card.Title>
                 <Card.Text>{movie.description}</Card.Text>
-                <Card.Text><strong>Genre:</strong> {movie.genre.join(", ")}</Card.Text>
+                <Card.Text><strong>Genre:</strong> {Array.isArray(movie.genre) ? movie.genre.join(", ") : "Unknown"}</Card.Text>
+
+                
+                {/* View Details Button */}
+                <Button as={Link} to={`/movies/${movie._id}`} variant="primary">
+                  View Details
+                </Button>
               </Card.Body>
             </Card>
           </Col>
