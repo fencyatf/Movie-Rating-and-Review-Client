@@ -19,51 +19,46 @@ const UserMovieDetails = () => {
             }
         };
 
+        // const fetchReviews = async () => {
+        //     try {
+        //         const { data } = await axiosInstance.get(`/reviews/${id}`);
+        //         console.log("Reviews API Response:", data);
+
+        //         if (!Array.isArray(data)) {
+        //             console.error("Expected an array but got:", data);
+        //             throw new Error("Invalid reviews format received.");
+        //         }
+
+        //         setReviews(data);
+        //     } catch (error) {
+        //         console.error("Error fetching reviews:", error.response?.data || error.message);
+        //         setReviews([]);
+        //     }
+        // };
+
         const fetchReviews = async () => {
             try {
-                const { data } = await axiosInstance.get(`/reviews/${id}`);
-        
-                if (!Array.isArray(data)) {
-                    throw new Error("Invalid reviews format received.");
+                const data = await axiosInstance.get(`/reviews?movieId=${id}`);
+                console.log("Reviews API Response:", data);
+
+                if (Array.isArray(data)) {
+                    setReviews(data); // ✅ Set state only if data is an array
+                } else {
+                    console.error("Expected an array but got:", data);
+                    setReviews([]);
                 }
-        
-                setReviews(data);
             } catch (error) {
                 console.error("Error fetching reviews:", error.response?.data || error.message);
-                setReviews([]); // Ensure reviews is always an array
+                setReviews([]);
             }
         };
-        
+
 
         fetchMovieDetails();
         fetchReviews();
     }, [id]);
 
-    // const handleLike = async (reviewId) => {
-    //     try {
-    //         await axiosInstance.post(`/reviews/${reviewId}/like`);
-    //         setReviews((prevReviews) =>
-    //             prevReviews.map((r) =>
-    //                 r._id === reviewId ? { ...r, likes: [...(r.likes || []), "userId"] } : r
-    //             )
-    //         );
-    //     } catch (error) {
-    //         console.error("Error liking review:", error);
-    //     }
-    // };
 
-    // const handleDislike = async (reviewId) => {
-    //     try {
-    //         await axiosInstance.post(`/reviews/${reviewId}/dislike`);
-    //         setReviews((prevReviews) =>
-    //             prevReviews.map((r) =>
-    //                 r._id === reviewId ? { ...r, dislikes: [...(r.dislikes || []), "userId"] } : r
-    //             )
-    //         );
-    //     } catch (error) {
-    //         console.error("Error disliking review:", error);
-    //     }
-    // };
 
 
     return (
@@ -71,7 +66,7 @@ const UserMovieDetails = () => {
             {movie ? (
                 <>
                     <h2>{movie.title}</h2>
-                    <p>Directed by: {movie.director}</p>
+                    <h5>Directed by: {movie.director}</h5>
                     <p>⭐ {movie.averageRating.toFixed(1)} ({movie.ratingCount} reviews)</p>
                     <img src={movie.posterUrl} alt={movie.title} className="img-fluid mb-3" />
                     <h3>Reviews</h3>
@@ -81,8 +76,6 @@ const UserMovieDetails = () => {
                             <div key={review._id} className="border p-3 mb-2">
                                 <strong>⭐ {review.rating}</strong>
                                 <p>{review.review}</p>
-                                {/* <button className="btn btn-sm btn-success" onClick={() => handleLike(review._id)}>👍 {review.likes?.length || 0}</button>
-                                <button className="btn btn-sm btn-danger ms-2" onClick={() => handleDislike(review._id)}>👎 {review.dislikes?.length || 0}</button> */}
                             </div>
                         ))}
                     </div>

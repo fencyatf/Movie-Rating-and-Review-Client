@@ -8,7 +8,7 @@ function AdminDashboard() {
       <Card className="p-4 rounded-4 border-0 shadow-lg">
         <h2 className="text-center text-dark fw-bold">Admin Dashboard</h2>
 
-        <Row className="g-4 mt-4">
+        <Row className="g-4 mt-4 justify-content-center">
           {/* First Row (3 items) */}
           <Col md={6} lg={4}>
             <Card className="border shadow-sm text-center p-4 rounded-4">
@@ -33,6 +33,8 @@ function AdminDashboard() {
               </Button>
             </Card>
           </Col>
+          </Row>
+          <Row className="g-4 mt-4 justify-content-center">
 
           <Col md={6} lg={4}>
             <Card className="border shadow-sm text-center p-4 rounded-4">
@@ -48,7 +50,7 @@ function AdminDashboard() {
         </Row>
 
         {/* Second Row (Centered 2 items) */}
-        <Row className="g-4 mt-4 justify-content-center">
+        {/* <Row className="g-4 mt-4 justify-content-center">
           <Col md={6} lg={4}>
             <Card className="border shadow-sm text-center p-4 rounded-4">
               <div className="p-3 bg-warning bg-opacity-10 rounded-circle mx-auto shadow-sm">
@@ -72,7 +74,7 @@ function AdminDashboard() {
               </Button>
             </Card>
           </Col>
-        </Row>
+        </Row> */}
 
       </Card>
     </Container>

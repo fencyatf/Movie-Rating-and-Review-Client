@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Container, Card, Button, Alert, Spinner } from "react-bootstrap";
 import { axiosInstance } from "../../config/axiosInstance";
 
-const Watchlist = () => {
+const Watchlist = ({ updateWatchlistCount }) => {
   const [watchlist, setWatchlist] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -11,29 +11,29 @@ const Watchlist = () => {
     fetchWatchlist();
   }, []);
 
-  // Fetch user's watchlist
+  // Fetch Watchlist
   const fetchWatchlist = async () => {
     try {
-      const response = await axiosInstance.get("/watchlist");
-      setWatchlist(response.data);
+      const { data } = await axiosInstance.get("/watchlist");
+      console.log("Watchlist Data:", data);
+      
+      // Check if posterUrl is present
+      data.forEach(movie => {
+        console.log("Movie:", movie);
+        console.log("Poster URL:", movie.movieId?.posterUrl);
+      });
+  
+      setWatchlist(data);
+      updateWatchlistCount(data.length);
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to fetch watchlist.");
+      setError(err.response?.data?.message);
     } finally {
       setLoading(false);
     }
   };
+  
 
-  // Add a movie to watchlist
-  const addToWatchlist = async (movieId) => {
-    try {
-      await axiosInstance.post(`/watchlist/${movieId}`);
-      fetchWatchlist(); // Refresh watchlist
-    } catch (err) {
-      setError(err.response?.data?.message || "Failed to add movie.");
-    }
-  };
-
-  // Remove a movie from watchlist
+  // Remove from Watchlist
   const removeFromWatchlist = async (movieId) => {
     try {
       await axiosInstance.delete(`/watchlist/${movieId}`);
@@ -57,7 +57,7 @@ const Watchlist = () => {
           {watchlist.map((movie) => (
             movie.movieId ? ( 
               <Card key={movie._id} className="m-3" style={{ width: "200px" }}>
-                <Card.Img variant="top" src={movie.movieId.poster_url} alt={movie.movieId.title} />
+                <Card.Img variant="top" src={movie.movieId.posterUrl} alt={movie.movieId.title} />
                 <Card.Body>
                   <Card.Title className="text-center">{movie.movieId.title}</Card.Title>
                   <Button variant="danger" size="sm" onClick={() => removeFromWatchlist(movie.movieId._id)}>
@@ -67,7 +67,6 @@ const Watchlist = () => {
               </Card>
             ) : null
           ))}
-
         </div>
       )}
     </Container>

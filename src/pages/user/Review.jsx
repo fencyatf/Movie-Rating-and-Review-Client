@@ -7,13 +7,26 @@ const Review = ({ movieId, setReviews }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const trimmedReview = reviewText.trim();
+    
+        if (!trimmedReview) {
+            console.error("Review text is required.");
+            // Optionally, display an error message to the user
+            return;
+        }
+    
         try {
             const { data } = await axiosInstance.post(`/reviews/${movieId}`, {
                 rating: Number(rating),
-                review: reviewText.trim(), // Prevent empty spaces being sent
+                review: trimmedReview,
             });
+            console.log("Review Submitted Response:", data);
 
-            setReviews((prevReviews) => [...prevReviews, data.review]); // Ensure 'review' is added
+            if (!data || !data.review || !data.review._id) {
+                throw new Error("Review submission failed, invalid response.");
+            }
+    
+            setReviews((prevReviews) => [...prevReviews, data.review]);
             setReviewText("");
             setRating(1);
         } catch (error) {
