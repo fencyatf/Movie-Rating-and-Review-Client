@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table, Button, Container, Spinner, Form } from "react-bootstrap";
+import { Table, Button, Container, Spinner, Form, Modal } from "react-bootstrap";
 import { Trash2, Ban, ArrowLeft, Search } from "lucide-react";
 import { axiosInstance } from "../../config/axiosInstance";
 import { useNavigate } from "react-router-dom";
@@ -9,8 +9,9 @@ const ManageUsers = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [message, setMessage] = useState("");
 
-  // Fetch all users
   useEffect(() => {
     axiosInstance
       .get("/admin/users")
@@ -24,27 +25,31 @@ const ManageUsers = () => {
       });
   }, []);
 
+  const showSuccessMessage = (msg) => {
+    setMessage(msg);
+    setShowModal(true);
+  };
+
   const filteredUsers = users.filter(user =>
     user.email.toLowerCase().includes(searchQuery.toLowerCase())
   );
-  
 
-  // Handle User Ban / Unban
   const handleBan = async (id, isBanned) => {
     try {
       await axiosInstance.put(`/admin/users/${isBanned ? "unban" : "ban"}/${id}`);
       setUsers(users.map(user => user._id === id ? { ...user, isBanned: !isBanned } : user));
+      showSuccessMessage(`User ${isBanned ? "unbanned" : "banned"} successfully!`);
     } catch (err) {
       console.error("Error updating ban status:", err);
     }
   };
 
-  // Handle User Deletion
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this user?")) {
       try {
         await axiosInstance.delete(`/admin/users/${id}`);
         setUsers(users.filter(user => user._id !== id));
+        showSuccessMessage("User deleted successfully!");
       } catch (err) {
         console.error("Error deleting user:", err);
       }
@@ -66,14 +71,15 @@ const ManageUsers = () => {
             className="me-2"
             style={{ width: "300px" }}
             aria-label="Search"
-            value={searchQuery} // Bind to state
-            onChange={(e) => setSearchQuery(e.target.value)} // Update state
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
           <Button variant="outline-dark">
             <Search />
           </Button>
         </Form>
       </div>
+
       <div>
         {loading ? (
           <div className="text-center">
@@ -115,6 +121,16 @@ const ManageUsers = () => {
           </Table>
         )}
       </div>
+
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Success</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="text-center"> {message}</Modal.Body>
+        <Modal.Footer>
+          <Button variant="success" onClick={() => setShowModal(false)}>OK</Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };
