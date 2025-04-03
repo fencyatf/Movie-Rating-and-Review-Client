@@ -15,14 +15,14 @@ const Watchlist = ({ updateWatchlistCount }) => {
   const fetchWatchlist = async () => {
     try {
       const { data } = await axiosInstance.get("/watchlist");
-      console.log("Watchlist Data:", data);
-      
+      //console.log("Watchlist Data:", data);
+
       // Check if posterUrl is present
       data.forEach(movie => {
-        console.log("Movie:", movie);
-        console.log("Poster URL:", movie.movieId?.posterUrl);
+       // console.log("Movie:", movie);
+        //console.log("Poster URL:", movie.movieId?.posterUrl);
       });
-  
+
       setWatchlist(data);
       updateWatchlistCount(data.length);
     } catch (err) {
@@ -31,7 +31,7 @@ const Watchlist = ({ updateWatchlistCount }) => {
       setLoading(false);
     }
   };
-  
+
 
   // Remove from Watchlist
   const removeFromWatchlist = async (movieId) => {
@@ -55,11 +55,17 @@ const Watchlist = ({ updateWatchlistCount }) => {
       ) : (
         <div className="d-flex flex-wrap justify-content-center">
           {watchlist.map((movie) => (
-            movie.movieId ? ( 
+            movie.movieId ? (
               <Card key={movie._id} className="m-3" style={{ width: "200px" }}>
                 <Card.Img variant="top" src={movie.movieId.posterUrl} alt={movie.movieId.title} />
                 <Card.Body>
                   <Card.Title className="text-center">{movie.movieId.title}</Card.Title>
+
+                  {/* Show "In Watchlist" only if the movie is present in the watchlist */}
+                  {watchlist.some((item) => item.movieId._id === movie.movieId._id) && (
+                    <span className="text-success d-block text-center">In Watchlist</span>
+                  )}
+
                   <Button variant="danger" size="sm" onClick={() => removeFromWatchlist(movie.movieId._id)}>
                     Remove
                   </Button>

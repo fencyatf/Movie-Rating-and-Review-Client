@@ -11,6 +11,8 @@ function UserHeader() {
   const [role, setRole] = useState(localStorage.getItem("role"));
   const [showSidebar, setShowSidebar] = useState(false);
   const [watchlistCount, setWatchlistCount] = useState(0);
+  const [userId, setUserId] = useState(localStorage.getItem("userId") || "");
+
 
   useEffect(() => {
     if (role === "admin") {
@@ -22,7 +24,9 @@ function UserHeader() {
     const checkAuth = () => {
       setIsLoggedIn(!!localStorage.getItem("token"));
       setRole(localStorage.getItem("role"));
+      setUserId(localStorage.getItem("userId") || ""); // Update userId state
     };
+
 
     window.addEventListener("authChange", checkAuth);
     window.addEventListener("storage", checkAuth);
@@ -37,9 +41,7 @@ function UserHeader() {
     if (isLoggedIn) {
       const fetchWatchlistCount = async () => {
         try {
-          const response = await axiosInstance.get("/watchlist", {
-            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-          });
+          const response = await axiosInstance.get("/watchlist"); // No need for Authorization header
 
           if (!response.data || response.status !== 200) {
             throw new Error("Failed to fetch watchlist");
@@ -55,6 +57,8 @@ function UserHeader() {
       fetchWatchlistCount();
     }
   }, [isLoggedIn]);
+
+
 
 
   const handleLogout = () => {
@@ -126,9 +130,12 @@ function UserHeader() {
                   )}
                 </Nav.Link>
 
-                {/* <Nav.Link as={Link} to="/user-reviews" className="d-flex align-items-center text-white" onClick={() => setShowSidebar(false)}>
+                <Nav.Link
+                  as={Link}
+                  to="/user-review" className="d-flex align-items-center text-white" onClick={() => setShowSidebar(false)}>
                   <Star className="me-2 text-warning" size={20} /> My Reviews
-                </Nav.Link> */}
+                </Nav.Link>
+
 
                 {/* Profile Dropdown */}
                 <Dropdown className="mt-2">

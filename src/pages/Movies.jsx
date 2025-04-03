@@ -89,7 +89,7 @@ const Movies = () => {
 
       // Fetch reviews for the retrieved movies
       response.data.forEach((movie) => fetchReviews(movie._id));
-    } catch (err) {
+    } catch (error) {
       setMovies([]);
       setError("No movies found");
     }

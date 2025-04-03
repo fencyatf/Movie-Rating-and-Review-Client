@@ -28,7 +28,7 @@ import ManageReviews from '../pages/admin/ManageReviews';
 import ManageReports from '../pages/admin/ManageReports';
 import UserMovies from '../pages/user/UserMovies';
 import UserMovieDetails from '../pages/user/UserMovieDetails';
-//import UserReviews from '../pages/user/UserReviews';
+import UserReview from '../pages/user/UserReview';
 
 
 export const router = createBrowserRouter([
@@ -54,7 +54,7 @@ export const router = createBrowserRouter([
           { path: "change-password", element: <ChangePassword /> },
           { path: "delete-account", element: <DeleteAccount /> },
           { path: "watchlist", element: <Watchlist /> },
-          //{ path: "user-reviews", element: <UserReviews /> },
+          { path: "user-review", element: <UserReview /> },
           { path: "user-movies", element: <UserMovies /> },
           { path: "reviews/:id", element: <Review /> }, // ✅ Uncommented if needed
         ],

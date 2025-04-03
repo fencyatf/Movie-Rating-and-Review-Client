@@ -16,7 +16,8 @@ const ManageReports = () => {
       const response = await axiosInstance.get("/reports");
       setReports(response.data);
       setLoading(false);
-    } catch (err) {
+    } catch (error) {
+      console.error(error);
       setError("Error fetching reports");
       setLoading(false);
     }

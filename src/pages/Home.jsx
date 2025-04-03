@@ -48,7 +48,8 @@ const Home = () => {
 
       setMovies(response.data);
       setError("");
-    } catch (err) {
+    } catch (error) {
+      console.error(error);
       setMovies([]);
       setError("No movies found");
     }
@@ -87,45 +88,17 @@ const Home = () => {
 
   return (
     <>
-      <section className="text-center py-5 bg-dark text-white">
-        <Container>
-          <Carousel>
-            <Carousel.Item>
-              <img className="d-block w-100" src="https://www.metacritic.com/a/img/resize/b7768de584471cee11e2ba1fe1c90af03285c973/catalog/provider/2/13/2-8bf95b5035fb009338ff590ab90c705d.jpg?auto=webp&fit=crop&height=675&width=1200" alt="First slide" />
-              <Carousel.Caption>
-                <h3>2018</h3>
-                <p>A survival thriller depicting the Kerala floods of 2018 and the resilience of its people.</p>
-              </Carousel.Caption>
-            </Carousel.Item>
-            <Carousel.Item>
-              <img className="d-block w-100" src="https://images.indianexpress.com/2023/08/rdx.jpg" alt="Second slide" />
-              <Carousel.Caption>
-                <h3>RDX</h3>
-                <p>An action-packed drama about three friends and their fight against injustice.</p>
-              </Carousel.Caption>
-            </Carousel.Item>
-            <Carousel.Item>
-              <img className="d-block w-100" src="https://totalreporter.com/wp-content/uploads/2024/02/Manjummel-Boys-1024x512.jpg" alt="Third slide" />
-              <Carousel.Caption>
-                <h3>Manjummel Boys</h3>
-                <p>A thrilling story of friendship and survival, inspired by real events.</p>
-              </Carousel.Caption>
-            </Carousel.Item>
-          </Carousel>
-        </Container>
-      </section>
 
-      <section className="py-4 bg-light">
+
+      <section className="py-4 bg-info ">
         <Container>
           <Form className="d-flex justify-content-center">
             <Form.Control type="text" placeholder="Search movies or genres..." className="w-50 me-2" value={searchQuery} onChange={handleSearchChange} />
             <Button variant="primary" onClick={handleSearch}><FaSearch /></Button>
           </Form>
         </Container>
-      </section>
-
-      <section className="py-5">
-        <Container>
+      
+        <Container className="mt-4 ">
           {error && <p className="text-center text-danger">{error}</p>}
           <Row>
             {movies.length > 0 ? (
@@ -166,8 +139,85 @@ const Home = () => {
                 </Col>
               ))
             ) : (
-              <h3 className="text-center text-muted">Start searching for movies!</h3>
+              <h3 className="text-center text-muted">Start searching for your favourite movies!</h3>
             )}
+          </Row>
+        </Container>
+      </section>
+      <section className="text-center py-5 ">
+        <Container>
+          <Row className="align-items-center">
+            {/* Left Column - Carousel */}
+            <Col md={8}>
+              <Carousel>
+                <Carousel.Item>
+                  <img className="d-block w-100" src="https://assets-in.bmscdn.com/iedb/movies/images/mobile/listing/xxlarge/l2-empuraan-et00305698-1742987562.jpg" alt="First slide" />
+                  <Carousel.Caption>
+                    <h3>L2: Empuraan</h3>
+                  </Carousel.Caption>
+                </Carousel.Item>
+                <Carousel.Item>
+                  <img className="d-block w-100" src="https://assets-in.bmscdn.com/iedb/movies/images/mobile/listing/xxlarge/officer-on-duty-et00431676-1738321341.jpg" alt="Second slide" />
+                  <Carousel.Caption>
+                    <h3>Officer on Duty</h3>
+                  </Carousel.Caption>
+                </Carousel.Item>
+                <Carousel.Item>
+                  <img className="d-block w-100" src="https://assets-in.bmscdn.com/iedb/movies/images/mobile/listing/xxlarge/get-set-baby-et00430189-1737530759.jpg" alt="Third slide" />
+                  <Carousel.Caption>
+                    <h3>Get-Set Baby</h3>
+
+                  </Carousel.Caption>
+                </Carousel.Item>
+                <Carousel.Item>
+                  <img className="d-block w-100" src="https://assets-in.bmscdn.com/iedb/movies/images/mobile/listing/xxlarge/abhilasham-et00438997-1742543253.jpg" alt="Forth slide" />
+                  <Carousel.Caption>
+                    <h3>Abhilasham</h3>
+                  </Carousel.Caption>
+                </Carousel.Item>
+              </Carousel>
+            </Col>
+            {/* Right Column - Small Cards */}
+            <Col md={4}>
+              <div style={{ border: "1px solid #ddd", borderRadius: ".5rem", padding: "10px", marginBottom: "10px" }}>
+                <Row className="d-flex align-items-center">
+                  <Col xs={5}>
+                    <img
+                      src="https://assets-in.bmscdn.com/iedb/movies/images/mobile/thumbnail/xlarge/veera-dheera-sooran--part-2-et00423507-1742972468.jpg"
+                      style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: ".3125rem" }}
+                      alt="Veera Dheera Sooran"
+                    />
+                  </Col>
+                  <Col xs={7}>
+                    <h5 style={{ fontSize: "1rem", marginBottom: "5px" }}>Veera Dheera Sooran</h5>
+                    <p style={{ fontSize: "0.8rem", marginBottom: "0" }}>
+                      On a fateful night, Kaali's peaceful life is disrupted by SP's thirst for revenge.
+                    </p>
+                  </Col>
+                </Row>
+              </div>
+
+              <div style={{ border: "1px solid #ddd", borderRadius: ".5rem", padding: "10px" }}>
+                <Row className="d-flex align-items-center">
+                  <Col xs={5}>
+                    <img
+                      src="https://assets-in.bmscdn.com/iedb/movies/images/mobile/thumbnail/xlarge/disneys-snow-white-et00408154-1723536682.jpg"
+                      style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: ".3125rem" }}
+                      alt="Snow White"
+                    />
+                  </Col>
+                  <Col xs={7}>
+                    <h5 style={{ fontSize: "1rem", marginBottom: "5px" }}>Snow White</h5>
+                    <p style={{ fontSize: "0.8rem", marginBottom: "0" }}>
+                      Disney’s Snow White is a live-action musical reimagining of the classic 1937 film.
+                    </p>
+                  </Col>
+                </Row>
+              </div>
+            </Col>
+
+
+
           </Row>
         </Container>
       </section>

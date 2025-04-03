@@ -14,7 +14,7 @@ const AdminProtectedRoutes = () => {
     } else {
       setIsAdminAuth(true);
     }
-  }, []);
+  }, [navigate]);
 
   return isAdminAuth ? <Outlet /> : null; // Wait until authentication check is complete
 };

@@ -29,18 +29,18 @@ const UserMovies = ({ updateWatchlistCount }) => {
   // Fetch Watchlist
   const fetchWatchlist = async () => {
     try {
-      const { data } = await axiosInstance.get("/watchlist");
-      setWatchlist(data);
+        const { data } = await axiosInstance.get("/watchlist");
+        setWatchlist(data);
 
-      if (typeof updateWatchlistCount === "function") {
-        updateWatchlistCount(data.length);
-      } else {
-        console.error("updateWatchlistCount is not a function");
-      }
+        if (updateWatchlistCount && typeof updateWatchlistCount === "function") {
+            updateWatchlistCount(data.length);
+        } 
+
     } catch (error) {
-      console.error("Error fetching watchlist:", error);
+        console.error("Error fetching watchlist:", error);
     }
-  };
+};
+
 
   // Fetch Genres
   const fetchGenres = async () => {
@@ -84,6 +84,7 @@ const UserMovies = ({ updateWatchlistCount }) => {
       setMovies(response.data);
       setError("");
     } catch (err) {
+      console.error(err);
       setMovies([]);
       setError("No movies found");
     }
@@ -98,7 +99,7 @@ const getGenreName = (genreArray) => {
 
   return (
     <div className="container mt-4 ">
-      <h2 className="mb-3 text-center">Movies</h2>
+      
       <div className="mb-3 d-flex">
         <input
           type="text"
