@@ -37,7 +37,7 @@ const ManageUsers = () => {
   const handleBan = async (id, isBanned) => {
     try {
       await axiosInstance.put(`/admin/users/${isBanned ? "unban" : "ban"}/${id}`);
-      setUsers(users.map(user => user._id === id ? { ...user, isBanned: !isBanned } : user));
+      setUsers(users.map(user => user._id === id ? { ...user, isBanned: !isBanned, isActive: isBanned } : user));
       showSuccessMessage(`User ${isBanned ? "unbanned" : "banned"} successfully!`);
     } catch (err) {
       console.error("Error updating ban status:", err);
