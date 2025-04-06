@@ -20,12 +20,12 @@ function Contact() {
       return;
     }
 
-    // 📌 Save form data to Local Storage
+    //  Save form data to Local Storage
     localStorage.setItem("contactForm", JSON.stringify(formData));
 
     alert("Form submitted successfully! (Saved in Local Storage)");
 
-    // 📌 Clear the form fields after submission
+    //  Clear the form fields after submission
     setFormData({
       fullName: "",
       username: "",

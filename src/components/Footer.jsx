@@ -1,5 +1,6 @@
 import React from "react";
 import { BsFacebook, BsTwitter, BsInstagram } from "react-icons/bs"; // Import social media icons
+import { Link } from "react-router-dom";
 
 const Footer = () => {
     return (
@@ -10,12 +11,13 @@ const Footer = () => {
             >
                 {/* Navigation Links */}
                 <nav className="grid grid-flow-col gap-4 mt-4">
-                    <a href="/about" className="link link-hover text-white hover:underline">
+                    <Link to="/about" className="link link-hover text-white hover:underline">
                         About us
-                    </a>
-                    <a href="/contact" className="link link-hover text-white hover:underline">
+                    </Link>
+
+                    <Link to="/contact" className="link link-hover text-white hover:underline">
                         Contact
-                    </a>
+                    </Link>
                 </nav>
 
 
