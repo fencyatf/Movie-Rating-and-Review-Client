@@ -124,7 +124,7 @@ const getGenreName = (genreArray) => {
                 </p>
 
                 <p className="card-text flex-grow-1">
-                  ⭐ {movie.averageRating?.toFixed(1)} ({movie.ratingCount} reviews)
+                  ⭐ {movie.averageRating?.toFixed(2)} ({movie.ratingCount} reviews)
                 </p>
                 <div className="d-flex justify-content-between align-items-center">
                   <Link to={`/movies/${movie._id}`} className="btn btn-sm btn-primary">View Details</Link>

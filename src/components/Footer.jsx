@@ -5,7 +5,7 @@ const Footer = () => {
     return (
         <div>
             <footer
-                className="footer footer-horizontal footer-center text-white rounded p-10"
+                className="footer footer-horizontal footer-center text-white  p-10"
                 style={{ background: "linear-gradient(90deg, #000000, #8B0000, #FF4500)" }} // Matching header color
             >
                 {/* Navigation Links */}

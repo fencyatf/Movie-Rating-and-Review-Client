@@ -24,7 +24,7 @@ import AdminProfile from '../pages/admin/AdminProfile';
 import ManageUsers from '../pages/admin/ManageUsers';
 import ManageMovies from '../pages/admin/ManageMovies';
 import ManageGenres from '../pages/admin/ManageGenres';
-import ManageReviews from '../pages/admin/ManageReviews';
+// import ManageReviews from '../pages/admin/ManageReviews';
 import ManageReports from '../pages/admin/ManageReports';
 import UserMovies from '../pages/user/UserMovies';
 import UserMovieDetails from '../pages/user/UserMovieDetails';
@@ -67,7 +67,7 @@ export const router = createBrowserRouter([
           { path: "manage-users", element: <ManageUsers /> },
           { path: "manage-movies", element: <ManageMovies /> },
           { path: "manage-genres", element: <ManageGenres /> },
-          { path: "manage-reviews", element: <ManageReviews /> },
+          // { path: "manage-reviews", element: <ManageReviews /> },
           { path: "manage-reports", element: <ManageReports /> },
         ],
       },

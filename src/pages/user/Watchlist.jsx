@@ -19,7 +19,7 @@ const Watchlist = ({ updateWatchlistCount }) => {
 
       // Check if posterUrl is present
       data.forEach(movie => {
-       // console.log("Movie:", movie);
+        // console.log("Movie:", movie);
         //console.log("Poster URL:", movie.movieId?.posterUrl);
       });
 
@@ -56,10 +56,19 @@ const Watchlist = ({ updateWatchlistCount }) => {
         <div className="d-flex flex-wrap justify-content-center">
           {watchlist.map((movie) => (
             movie.movieId ? (
-              <Card key={movie._id} className="m-3" style={{ width: "200px" }}>
-                <Card.Img variant="top" src={movie.movieId.posterUrl} alt={movie.movieId.title} />
+              <Card key={movie._id} className="m-3" style={{ width: "200px", height: "400px" }}>
+                <Card.Img variant="top" src={movie.movieId.posterUrl} alt={movie.movieId.title} style={{ height: "250px", objectFit: "cover" }} />
                 <Card.Body>
-                  <Card.Title className="text-center">{movie.movieId.title}</Card.Title>
+                  <Card.Title
+                    className="text-center"
+                    style={{
+                      fontSize: "16px",
+                      height: "40px",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap"
+                    }}
+                  >{movie.movieId.title}</Card.Title>
 
                   {/* Show "In Watchlist" only if the movie is present in the watchlist */}
                   {watchlist.some((item) => item.movieId._id === movie.movieId._id) && (
