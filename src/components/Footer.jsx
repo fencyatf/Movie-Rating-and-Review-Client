@@ -1,49 +1,29 @@
 import React from "react";
-import { BsFacebook, BsTwitter, BsInstagram } from "react-icons/bs"; // Import social media icons
+import { BsFacebook, BsTwitter, BsInstagram } from "react-icons/bs";
 import { Link } from "react-router-dom";
+import "./Footer.css"; 
 
 const Footer = () => {
     return (
-        <div>
-            <footer
-                className="footer footer-horizontal footer-center text-white  p-10"
-                style={{ background: "linear-gradient(90deg, #000000, #8B0000, #FF4500)" }} // Matching header color
-            >
-                {/* Navigation Links */}
-                <nav className="grid grid-flow-col gap-4 mt-4">
-                    <Link to="/about" className="link link-hover text-white hover:underline">
-                        About us
-                    </Link>
+        <footer className="custom-footer text-white">
+            {/* Navigation Links */}
+            <nav className="footer-links">
+                <Link to="/about" className="footer-link">About Us</Link>
+                <Link to="/contact" className="footer-link">Contact</Link>
+            </nav>
 
-                    <Link to="/contact" className="link link-hover text-white hover:underline">
-                        Contact
-                    </Link>
-                </nav>
+            {/* Social Media Icons */}
+            <div className="footer-icons">
+                <a href="#" className="social-icon"><BsFacebook /></a>
+                <a href="#" className="social-icon"><BsTwitter /></a>
+                <a href="#" className="social-icon"><BsInstagram /></a>
+            </div>
 
-
-                {/* Social Media Icons */}
-                <nav>
-                    <div className="grid grid-flow-col gap-4">
-                        <a href="#" className="text-warning fs-4"> {/* Yellow social media icons */}
-                            <BsFacebook />
-                        </a>
-                        <a href="#" className="text-warning fs-4">
-                            <BsTwitter />
-                        </a>
-                        <a href="#" className="text-warning fs-4">
-                            <BsInstagram />
-                        </a>
-                    </div>
-                </nav>
-
-                {/* Copyright Section */}
-                <aside>
-                    <p className="text-white">
-                        Copyright © {new Date().getFullYear()} - All rights reserved by Movie Hub
-                    </p>
-                </aside>
-            </footer>
-        </div>
+            {/* Copyright */}
+            <div className="footer-copy">
+                <p>© {new Date().getFullYear()} Movie Hub. All rights reserved.</p>
+            </div>
+        </footer>
     );
 };
 

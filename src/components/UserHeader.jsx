@@ -4,6 +4,7 @@ import { BsFilm, BsList } from "react-icons/bs";
 import { Link, useNavigate } from "react-router-dom";
 import { Settings, Bookmark, LogOut, Home, UserRoundPen, Popcorn, Star, Bell } from "lucide-react";
 import { axiosInstance } from "../config/axiosInstance";
+import "./UserHeader.css"; 
 
 function UserHeader() {
   const navigate = useNavigate();
@@ -12,7 +13,6 @@ function UserHeader() {
   const [showSidebar, setShowSidebar] = useState(false);
   const [watchlistCount, setWatchlistCount] = useState(0);
   const [userId, setUserId] = useState(localStorage.getItem("userId") || "");
-
 
   useEffect(() => {
     if (role === "admin") {
@@ -24,9 +24,8 @@ function UserHeader() {
     const checkAuth = () => {
       setIsLoggedIn(!!localStorage.getItem("token"));
       setRole(localStorage.getItem("role"));
-      setUserId(localStorage.getItem("userId") || ""); // Update userId state
+      setUserId(localStorage.getItem("userId") || ""); 
     };
-
 
     window.addEventListener("authChange", checkAuth);
     window.addEventListener("storage", checkAuth);
@@ -41,25 +40,19 @@ function UserHeader() {
     if (isLoggedIn) {
       const fetchWatchlistCount = async () => {
         try {
-          const response = await axiosInstance.get("/watchlist"); // No need for Authorization header
-
-          if (!response.data || response.status !== 200) {
-            throw new Error("Failed to fetch watchlist");
+          const response = await axiosInstance.get("/watchlist");
+          if (response.status === 200) {
+            setWatchlistCount(response.data.length);
+          } else {
+            setWatchlistCount(0);
           }
-
-          // Set the watchlist count
-          setWatchlistCount(response.data.length);
         } catch (error) {
           console.error("Error fetching watchlist count:", error);
         }
       };
-
       fetchWatchlistCount();
     }
   }, [isLoggedIn]);
-
-
-
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -74,10 +67,7 @@ function UserHeader() {
 
   return (
     <>
-      {role === "admin" ? navigate("/admin-dashboard") : null}
-
-      {/* Navbar */}
-      <Navbar expand="lg" className="px-4 py-2" style={{ background: "linear-gradient(90deg, #000000, #8B0000, #FF4500)" }}>
+      <Navbar expand="lg" className="px-4 py-2 custom-navbar">
         <Container fluid>
           <Navbar.Brand as={Link} to="/" className="d-flex align-items-center fw-bold text-white">
             <BsFilm className="me-2 fs-4 text-warning" /> MOVIE HUB
@@ -104,24 +94,24 @@ function UserHeader() {
         show={showSidebar}
         onHide={() => setShowSidebar(false)}
         placement="end"
-        style={{ background: "#121212", color: "#FFFFFF" }}
+        className="custom-sidebar"
       >
         <Offcanvas.Header closeButton>
-          <Offcanvas.Title className="fw-bold text-warning">Hey!</Offcanvas.Title>
+          <Offcanvas.Title className="fw-bold text-warning">Hello, User!</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
           <Nav className="flex-column">
-            <Nav.Link as={Link} to="/" className="d-flex align-items-center text-white" onClick={() => setShowSidebar(false)}>
+            <Nav.Link as={Link} to="/" className="text-white d-flex align-items-center" onClick={() => setShowSidebar(false)}>
               <Home className="me-2 text-warning" size={20} /> Home
             </Nav.Link>
 
             {isLoggedIn && role === "user" && (
               <>
-                <Nav.Link as={Link} to="/user-movies" className="d-flex align-items-center text-white" onClick={() => setShowSidebar(false)}>
+                <Nav.Link as={Link} to="/user-movies" className="text-white d-flex align-items-center" onClick={() => setShowSidebar(false)}>
                   <Popcorn className="me-2 text-warning" size={20} /> Movies
                 </Nav.Link>
 
-                <Nav.Link as={Link} to="/watchlist" className="d-flex align-items-center text-white position-relative" onClick={() => setShowSidebar(false)}>
+                <Nav.Link as={Link} to="/watchlist" className="text-white d-flex align-items-center position-relative" onClick={() => setShowSidebar(false)}>
                   <Bookmark className="me-2 text-warning" size={20} /> Watchlist
                   {watchlistCount > 0 && (
                     <span className="badge bg-danger position-absolute top-0 start-100 translate-middle rounded-circle">
@@ -130,12 +120,9 @@ function UserHeader() {
                   )}
                 </Nav.Link>
 
-                <Nav.Link
-                  as={Link}
-                  to="/user-review" className="d-flex align-items-center text-white" onClick={() => setShowSidebar(false)}>
+                <Nav.Link as={Link} to="/user-review" className="text-white d-flex align-items-center" onClick={() => setShowSidebar(false)}>
                   <Star className="me-2 text-warning" size={20} /> My Reviews
                 </Nav.Link>
-
 
                 {/* Profile Dropdown */}
                 <Dropdown className="mt-2">
@@ -168,14 +155,14 @@ function UserHeader() {
                 </Dropdown>
 
                 {/* Logout */}
-                <Nav.Link onClick={handleLogout} className="d-flex align-items-center text-danger mt-2" style={{ cursor: "pointer" }}>
+                <Nav.Link onClick={handleLogout} className="text-danger mt-2 d-flex align-items-center" style={{ cursor: "pointer" }}>
                   <LogOut className="me-2 text-danger" size={20} /> Logout
                 </Nav.Link>
               </>
             )}
 
             {!isLoggedIn && (
-              <Nav.Link as={Link} to="/login" className="d-flex align-items-center fw-bold text-warning" onClick={() => setShowSidebar(false)}>
+              <Nav.Link as={Link} to="/login" className="text-warning fw-bold" onClick={() => setShowSidebar(false)}>
                 Login
               </Nav.Link>
             )}
@@ -187,4 +174,3 @@ function UserHeader() {
 }
 
 export default UserHeader;
-

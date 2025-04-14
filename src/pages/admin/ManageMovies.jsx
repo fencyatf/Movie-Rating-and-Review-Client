@@ -3,7 +3,7 @@ import { axiosInstance } from "../../config/axiosInstance";
 import { Container, Card, Button, Modal, Form, Row, Col } from "react-bootstrap";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
+import './ManageMovies.css'
 
 const ManageMovies = () => {
     const [movies, setMovies] = useState([]);
@@ -51,8 +51,6 @@ const ManageMovies = () => {
     
         setFilteredMovies(filtered);
     };
-    
-
 
     const handleShow = (movie = null) => {
         setEditMovie(movie);
@@ -76,6 +74,7 @@ const ManageMovies = () => {
             });
         setShow(true);
     };
+
     const handleClose = () => setShow(false);
     const showSuccessMessage = (msg) => {
         setMessage(msg);
@@ -99,33 +98,22 @@ const ManageMovies = () => {
 
     const getGenreName = (genreArray) => {
         if (!Array.isArray(genreArray)) return "Unknown Genre";
-
         return genreArray
             .map((genre) => {
-                // If genre is an object (direct name access)
                 if (genre.name) return genre.name;
-
-                // If genre is an ID, find its name in genres state
                 const foundGenre = genres.find((g) => String(g._id) === String(genre));
                 return foundGenre ? foundGenre.name : null;
             })
-            .filter(Boolean) // Remove null/undefined values
+            .filter(Boolean)
             .join(", ") || "Unknown Genre";
     };
 
-
     const handleSubmit = (e) => {
         e.preventDefault();
-
-        console.log("Submitting movie:", newMovie);
-
-        // Send only genre IDs
         const formattedMovie = {
             ...newMovie,
-            genre: newMovie.genre.map(id => String(id))  // Ensure it's an array of strings
+            genre: newMovie.genre.map(id => String(id))
         };
-
-        console.log("Formatted movie:", formattedMovie);
 
         const request = editMovie
             ? axiosInstance.put(`/movies/${editMovie._id}`, formattedMovie)
@@ -134,15 +122,12 @@ const ManageMovies = () => {
         request.then(() => {
             axiosInstance.get("/movies")
                 .then(response => {
-                    console.log("Movies Data:", response.data);
                     setMovies(response.data)
                     setFilteredMovies(response.data);
                 });
             showSuccessMessage(editMovie ? "Movie updated successfully!" : "Movie added successfully!");
             handleClose();
         }).catch(error => {
-            console.error("Error response:", error.response?.data || error);
-            // Show error message
             showSuccessMessage("Error processing request.");
         });
     };
@@ -152,7 +137,6 @@ const ManageMovies = () => {
             setMovies(movies.filter(movie => movie._id !== id));
             showSuccessMessage("Movie deleted successfully!");
         }).catch(error => {
-            console.error(error);
             showSuccessMessage("Error deleting movie.");
         });
     };
@@ -179,16 +163,15 @@ const ManageMovies = () => {
                 <Button variant="success" onClick={() => handleShow()}>+ Add Movie</Button>
             </div>
 
-
-            <Row className="g-4 justify-content-center"> 
-            {(filteredMovies.length ? filteredMovies : movies).map(movie => (
+            <Row className="g-4 justify-content-center">
+                {(filteredMovies.length ? filteredMovies : movies).map(movie => (
                     <Col key={movie._id} md={4} lg={3}>
-                        <Card className="shadow-sm h-100">
+                        <Card className="shadow-sm h-100 card-hover-effect">
                             <Card.Img variant="top" src={movie.posterUrl} style={{ height: "300px", objectFit: "cover" }} />
                             <Card.Body className="d-flex flex-column">
                                 <h4 className="text-primary">{movie.title}</h4>
                                 <Card.Subtitle className="text-muted mb-2"><strong>Genres:</strong> {getGenreName(movie.genre)}</Card.Subtitle>
-                                <Card.Subtitle className="text-muted mb-2"><strong>Director:</strong> {movie.director ? movie.director : "Unknown"}</Card.Subtitle>
+                                <Card.Subtitle className="text-muted mb-2"><strong>Director:</strong> {movie.director || "Unknown"}</Card.Subtitle>
                                 <Card.Text className="flex-grow-1"><strong>About the movie:</strong> {movie.description}</Card.Text>
                                 <Card.Text><strong>Average Rating:</strong> {movie.averageRating || "Not Rated"}</Card.Text>
                                 <Card.Text><strong>Rating Count:</strong> {movie.ratingCount || 0}</Card.Text>
@@ -200,7 +183,7 @@ const ManageMovies = () => {
                         </Card>
                     </Col>
                 ))}
-             </Row>
+            </Row>
 
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
@@ -245,21 +228,22 @@ const ManageMovies = () => {
                             <Form.Label>Poster URL</Form.Label>
                             <Form.Control type="text" name="posterUrl" value={newMovie.posterUrl} onChange={handleChange} />
                         </Form.Group>
-                        
+
                         <Button type="submit" className="mt-3">{editMovie ? "Update" : "Add"} Movie</Button>
                     </Form>
                 </Modal.Body>
             </Modal>
+
             <Modal show={showModal} onHide={() => setShowModal(false)} centered>
                 <Modal.Header closeButton>
                     <Modal.Title>Success</Modal.Title>
                 </Modal.Header>
-                <Modal.Body className="text-center"> {message}</Modal.Body>
+                <Modal.Body className="text-center">{message}</Modal.Body>
                 <Modal.Footer>
                     <Button variant="success" onClick={() => setShowModal(false)}>OK</Button>
                 </Modal.Footer>
             </Modal>
-            
+
         </Container>
     );
 };

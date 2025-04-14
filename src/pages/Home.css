@@ -1,0 +1,83 @@
+/* Home.css */
+
+.search-section {
+    background: linear-gradient(135deg, #0dcaf0, #6610f2);
+    padding: 3rem 0;
+    color: white;
+  }
+  
+  .search-section .form-control {
+    border-radius: 30px;
+    padding: 0.75rem 1.25rem;
+    font-size: 1.1rem;
+  }
+  
+  .search-section button {
+    border-radius: 30px;
+    padding: 0.6rem 1.2rem;
+  }
+  
+  .movie-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+  }
+  
+  .movie-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  }
+  
+  .movie-card img {
+    height: 400px;
+    object-fit: cover;
+  }
+  
+  .movie-card .card-body {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+  }
+  
+  .review-section {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 10px;
+    font-size: 0.9rem;
+  }
+  
+  .review-section strong {
+    color: #343a40;
+  }
+  
+  .carousel-caption {
+    background: rgba(0, 0, 0, 0.6);
+    padding: 1rem;
+    border-radius: 10px;
+  }
+  
+  .carousel img {
+    height: 500px;
+    object-fit: cover;
+  }
+  
+  .small-card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 12px;
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .small-card:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  }
+  
+  .small-card img {
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  

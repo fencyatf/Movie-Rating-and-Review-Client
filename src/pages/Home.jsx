@@ -3,6 +3,8 @@ import { Container, Row, Col, Button, Form, Card } from "react-bootstrap";
 import { FaSearch } from "react-icons/fa";
 import Carousel from "react-bootstrap/Carousel";
 import { axiosInstance } from "../config/axiosInstance";
+import "./Home.css";
+
 
 const Home = () => {
   // State variables for search, movies, errors, genres, and reviews
@@ -90,21 +92,21 @@ const Home = () => {
     <>
 
 
-      <section className="py-4 bg-info ">
+      <section className="search-section">
         <Container>
           <Form className="d-flex justify-content-center">
             <Form.Control type="text" placeholder="Search movies or genres..." className="w-50 me-2" value={searchQuery} onChange={handleSearchChange} />
             <Button variant="primary" onClick={handleSearch}><FaSearch /></Button>
           </Form>
         </Container>
-      
+
         <Container className="mt-4 ">
           {error && <p className="text-center text-danger">{error}</p>}
           <Row>
             {movies.length > 0 ? (
               movies.map((movie) => (
                 <Col key={movie._id} md={3} sm={6} className="mb-4">
-                  <Card className="shadow h-100">
+                  <Card className="movie-card h-100">
                     <Card.Img variant="top" src={movie.posterUrl || "https://via.placeholder.com/400x600?text=No+Image"} alt={movie.title || "Movie Poster"} style={{ height: "400px", objectFit: "cover" }} />
                     <Card.Body className="d-flex flex-column">
                       <Card.Title className="fw-bold">{movie.title}</Card.Title>
@@ -121,7 +123,7 @@ const Home = () => {
                         {showReviews[movie._id] ? "Hide Reviews" : "Show Reviews"}
                       </Button>
                       {showReviews[movie._id] && (
-                        <>
+                        <div className="review-section">
                           <h6>Reviews:</h6>
                           {reviews[movie._id]?.length > 0 ? (
                             reviews[movie._id].map((review, index) => (
@@ -132,7 +134,7 @@ const Home = () => {
                           ) : (
                             <p className="text-muted">No reviews yet.</p>
                           )}
-                        </>
+                        </div>
                       )}
                     </Card.Footer>
                   </Card>
@@ -179,7 +181,7 @@ const Home = () => {
             </Col>
             {/* Right Column - Small Cards */}
             <Col md={4}>
-              <div style={{ border: "1px solid #ddd", borderRadius: ".5rem", padding: "10px", marginBottom: "10px" }}>
+            <div className="small-card">
                 <Row className="d-flex align-items-center">
                   <Col xs={5}>
                     <img
@@ -197,7 +199,7 @@ const Home = () => {
                 </Row>
               </div>
 
-              <div style={{ border: "1px solid #ddd", borderRadius: ".5rem", padding: "10px" }}>
+              <div className="small-card">
                 <Row className="d-flex align-items-center">
                   <Col xs={5}>
                     <img

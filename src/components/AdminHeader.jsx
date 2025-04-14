@@ -32,7 +32,7 @@ function AdminHeader() {
     if (!isAdmin) return null; // Hide the header if the admin is logged out
 
     return (
-        <Navbar expand="lg" className="px-4 py-2" style={{ background: "linear-gradient(90deg, #8B0000, #FF4500)" }}>
+        <Navbar expand="lg" className="px-4 py-2" style={{ background: "linear-gradient(to right, #2c3e50, #4ca1af)" }}>
             <Container fluid>
                 <Navbar.Brand as={Link} to="/admin-dashboard" className="fw-bold text-white">
                     🎬 Admin Panel

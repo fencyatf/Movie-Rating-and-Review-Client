@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../config/axiosInstance";
 import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
 import { FaSearch } from "react-icons/fa";
+import './Movies.css'
+
 
 const Movies = () => {
   const [movies, setMovies] = useState([]);
@@ -113,7 +115,7 @@ const Movies = () => {
 
       {/* Search Bar */}
       <section className="py-4 bg-light">
-        <Container>
+        <Container className="search-bar">
           <Form className="d-flex justify-content-center">
             <Form.Control
               type="text"
@@ -129,6 +131,7 @@ const Movies = () => {
         </Container>
       </section>
 
+
       {/* Movie Cards */}
       <section className="py-5">
         <Container>
@@ -136,7 +139,7 @@ const Movies = () => {
             {movies.length > 0 ? (
               movies.map((movie) => (
                 <Col key={movie._id} md={3} sm={6} className="mb-4">
-                  <Card className="shadow h-100">
+                  <Card className="shadow h-100 card-zoom">
                     <Card.Img
                       variant="top"
                       src={movie.posterUrl || "https://via.placeholder.com/400x600?text=No+Image"}
@@ -156,9 +159,9 @@ const Movies = () => {
                         ⭐ {movie.averageRating ? movie.averageRating.toFixed(1) : "No rating"} ({movie.ratingCount || 0} reviews)
                       </Card.Text>
 
-                      <Card.Text className="flex-grow-1">
+                      {/* <Card.Text className="flex-grow-1">
                         {movie.description || "No description available"}
-                      </Card.Text>
+                      </Card.Text> */}
                     </Card.Body>
 
                     {/* Reviews Section */}
@@ -167,20 +170,22 @@ const Movies = () => {
                         {showReviews[movie._id] ? "Hide Reviews" : "Show Reviews"}
                       </Button>
                       {showReviews[movie._id] && (
-                        <>
+                        <div className="review-section">
                           <h6>Reviews:</h6>
                           {reviews[movie._id]?.length > 0 ? (
                             reviews[movie._id].map((review, index) => (
-                              <div key={index} className="border-bottom py-1">
+                              <div key={index}>
                                 <strong>{review.userId?.name || "Anonymous"}</strong>: {review.review}
                               </div>
                             ))
                           ) : (
-                            <p className="text-muted">No reviews yet.</p>
+                            <p>No reviews yet.</p>
                           )}
-                        </>
+                        </div>
                       )}
                     </Card.Footer>
+
+
                   </Card>
                 </Col>
               ))
