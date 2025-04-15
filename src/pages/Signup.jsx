@@ -88,7 +88,7 @@ const Signup = () => {
         </Form>
 
         <p className="text-center mt-3 signup-link">
-          Already have an account? <a href="/login">Login</a>
+        <a href="/login">Already have an account? Login</a>
         </p>
       </Card>
     </Container>
