@@ -87,8 +87,8 @@ const Signup = () => {
           </Button>
         </Form>
 
-        <p className="text-center mt-3 signup-link">
-        <a href="/login">Already have an account? Login</a>
+        <p className="text-center mt-3 signup-link" onClick={() => navigate("/login")}>
+        Already have an account? Login
         </p>
       </Card>
     </Container>
